@@ -1,0 +1,70 @@
+openapi: 3.0.0
+
+info:
+  title: My Watson APP for PowerVS OpenAPI Specification
+  description: OpenAPI specification for My Watson APP for PowerVS
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:<port>/
+
+
+components:
+  schemas:
+    VirtualMachine:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uuid
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+            - working
+            - failed
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - status
+        - created_at
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+      required:
+        - code
+        - message
+
+paths:
+  /lpars:
+    post:
+      description: Creates a new Virtual Machine
+      operationId: createVM
+      requestBody:
+        description: Virtual Machine to add
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VirtualMachine'
+      responses:
+        '201':
+          description: VM creation response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VirtualMachine'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
